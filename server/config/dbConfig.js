@@ -1,17 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false)
+mongoose.connect(process.env.mongo_url);
 
-const connectDB = async () => {
+const connection = mongoose.connection;
 
-    try {
-        const conn = await mongoose.connect(process.env.mongodb_url || "mongodb+srv://rajakeshri:LMSproject@cluster0.qjbixi1.mongodb.net/?retryWrites=true&w=majority", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
-        console.log(`MongoDB connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.log(error);
-        process.exit(1);
-    }
-}
+connection.on('connected' , ()=>{
+    console.log('Mongo DB Connection Successfully');
+})
 
-module.exports = connectDB;
+connection.on('error' , (err)=>{
+    console.log('Mongo DB Connection Failed');
+})
+
+module.exports = connection;
